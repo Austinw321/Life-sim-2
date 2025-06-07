@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mini Life Sim</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #fff8dc;
+            padding: 20px;
+        }
+        #game-box {
+            background: #fffde7;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            margin: auto;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+            border: 3px solid #ffcc00;
+        }
+        #stats, #event-text, #choices, #start-screen {
+            margin-bottom: 20px;
+        }
+        .stat {
+            margin: 4px 0;
+        }
+        button {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #ffcc00;
+            border: 2px solid #ff8800;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 16px;
+            background-color: #fff8dc;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-box">
+        <div id="start-screen">
+            <h2>Create Your Character</h2>
+            <button onclick="generateNameOnly()">🔤 Generate Name</button><br>
+            <label>Name: <input type="text" id="char-name" /></label><br><br>
+            <label>Gender:
+                <select id="char-gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Non-Binary">Non-Binary</option>
+                    <option value="Other">Other</option>
+                </select>
+            </label><br><br>
+            <label>Background:
+                <select id="char-background">
+                    <option value="Working Class">Working Class</option>
+                    <option value="Middle Class">Middle Class</option>
+                    <option value="Wealthy">Wealthy</option>
+                    <option value="Military Family">Military Family</option>
+                    <option value="Foster Care">Foster Care</option>
+                    <option value="Religious Upbringing">Religious Upbringing</option>
+                    <option value="Immigrant Family">Immigrant Family</option>
+                    <option value="Single Parent Household">Single Parent Household</option>
+                </select>
+            </label><br><br>
+            <div id="char-extra" style="margin-top:10px;"></div><br>
+            <button onclick="randomizeCharacter()">🎲 Randomize All</button><br>
+            <button onclick="startGame()">Start Life</button>
+        </div>
+
+        <div id="main-game" style="display:none;">
+            <h2 id="player-name"></h2>
+            <div id="stats">
+                <div class="stat">Age: <span id="age">0</span></div>
+                <div class="stat">Happiness: <span id="happiness">50</span></div>
+                <div class="stat">Health: <span id="health">50</span></div>
+                <div class="stat">Money: $<span id="money">0</span></div>
+            </div>
+            <div id="event-text">Welcome to life!</div>
+            <div id="choices"></div>
+            <button onclick="ageUp()">Age Up</button>
+        </div>
+    </div>
+
+    <script>
+        function generateNameOnly() {
+            const firstNames = ["Alex", "Jordan", "Taylor", "Casey", "Skyler", "Riley", "Morgan", "Elliot", "Kai", "Avery"];
+            const lastNames = ["Smith", "Johnson", "Watford", "Garcia", "Lopez", "Nguyen", "Brown", "Williams", "Lee", "Walker"];
+            const fullName = firstNames[Math.floor(Math.random() * firstNames.length)] + " " +
+                             lastNames[Math.floor(Math.random() * lastNames.length)];
+            document.getElementById("char-name").value = fullName;
+        }
+
+        function randomizeCharacter() {
+            generateNameOnly();
+            const genders = ["Male", "Female", "Non-Binary", "Other"];
+            const backgrounds = [
+                "Working Class", "Middle Class", "Wealthy", "Military Family", "Foster Care",
+                "Religious Upbringing", "Immigrant Family", "Single Parent Household"
+            ];
+            const cultures = [
+                "African American", "Hispanic/Latino", "Native American", "German-American", "Asian-American",
+                "Jewish-American", "Multiracial", "Afro-Caribbean", "Filipino", "Vietnamese"
+            ];
+            const traits = [
+                "Creative", "Athletic", "Introverted", "Charismatic", "Rebellious", "Empathetic",
+                "Strategic", "Bookworm", "Funny", "Hardworking"
+            ];
+
+            document.getElementById("char-gender").value = genders[Math.floor(Math.random() * genders.length)];
+            document.getElementById("char-background").value = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+            const culture = cultures[Math.floor(Math.random() * cultures.length)];
+            const trait = traits[Math.floor(Math.random() * traits.length)];
+
+            document.getElementById("char-extra").innerHTML =
+                "<strong>Culture:</strong> " + culture + "<br><strong>Trait:</strong> " + trait;
+        }
+
+        let age = 0, happiness = 50, health = 50, money = 0;
+        let playerName = "";
+
+        function startGame() {
+            playerName = document.getElementById("char-name").value || "Unnamed";
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("main-game").style.display = "block";
+            document.getElementById("player-name").textContent = playerName + "'s Life";
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById("age").textContent = age;
+            document.getElementById("happiness").textContent = happiness;
+            document.getElementById("health").textContent = health;
+            document.getElementById("money").textContent = money;
+        }
+
+        function ageUp() {
+            age++;
+            const eventText = "You lived another year. Things happened.";
+            document.getElementById("event-text").textContent = eventText;
+            updateStats();
+        }
+    </script>
+</body>
+</html>
